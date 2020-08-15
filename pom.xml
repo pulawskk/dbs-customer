@@ -15,4 +15,12 @@
     <name>dbs-customer</name>
     <description>Customer microservice for dburgers app</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <version>2.2.4.RELEASE</version>
+        </dependency>
+    </dependencies>
+
 </project>

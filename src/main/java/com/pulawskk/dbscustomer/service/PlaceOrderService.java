@@ -10,11 +10,11 @@ import com.pulawskk.dbscustomer.model.PlaceOrderEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,25 +22,22 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Slf4j
 @Component
-@ConfigurationProperties(value = "dbs.food")
 public class PlaceOrderService {
 
-    private final static String BURGER_BASE_URL = "/api/v1/burgers";
+    private final FoodProvider foodProvider;
+
+    public final static String BURGER_BASE_URL = "/api/v1/burgers";
     private final static ThreadLocalRandom random = ThreadLocalRandom.current();
 
-    private String apihost;
     private List<String> users;
     private final Faker faker;
     private final JmsTemplate jmsTemplate;
-    private final RestTemplateBuilder restTemplateBuilder;
-    private RestTemplate restTemplate;
+
     private final ObjectMapper objectMapper;
 
-    public PlaceOrderService(JmsTemplate jmsTemplate, RestTemplateBuilder restTemplateBuilder, ObjectMapper objectMapper) {
+    public PlaceOrderService(JmsTemplate jmsTemplate, RestTemplateBuilder restTemplateBuilder, FoodProvider foodProvider, ObjectMapper objectMapper) {
         this.jmsTemplate = jmsTemplate;
-        this.restTemplateBuilder = restTemplateBuilder;
-
-        restTemplate = restTemplateBuilder.build();
+        this.foodProvider = foodProvider;
         this.objectMapper = objectMapper;
 
         faker = new Faker();
@@ -54,10 +51,6 @@ public class PlaceOrderService {
         users.add("555544");
         users.add("678988");
         users.add("190990");
-    }
-
-    public void setApihost(String apihost) {
-        this.apihost = apihost;
     }
 
     @Scheduled(fixedRate = 10_000)
@@ -85,14 +78,8 @@ public class PlaceOrderService {
     }
 
     private Long randomBurgerId() {
-
-        ResponseEntity<BurgerDtoList> responseEntity = restTemplate.getForEntity(apihost + BURGER_BASE_URL, BurgerDtoList.class);
-
-        if (responseEntity.getBody() != null) {
-            List<BurgerDto> burgers = responseEntity.getBody().getBurgers();
-            return Long.valueOf(burgers.get(random.nextInt(burgers.size())).getId());
-        }
-        return 0L;
+        List<BurgerDto> burgers = foodProvider.getBurgerDtoList().getBurgers();
+        return Long.valueOf(burgers.get(random.nextInt(burgers.size())).getId());
     }
 
     private String randomUserId() {

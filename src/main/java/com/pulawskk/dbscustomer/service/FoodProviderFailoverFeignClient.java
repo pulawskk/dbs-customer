@@ -6,10 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient(name = "dbs-food", fallback = FoodProviderFailover.class)
-public interface FoodProviderFeignClient {
-
-    @RequestMapping(method = RequestMethod.GET, value = PlaceOrderService.BURGER_BASE_URL)
+@FeignClient(name = "dbs-food-failover")
+public interface FoodProviderFailoverFeignClient {
+    @RequestMapping(method = RequestMethod.GET, value = "/burgers-failover")
     ResponseEntity<BurgerDtoList> getBurgers();
-
 }

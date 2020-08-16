@@ -35,12 +35,8 @@ public class FoodProviderRestTemplateImpl implements FoodProviderRestTemplate, F
     }
 
     @Override
-    public ResponseEntity<BurgerDtoList> getBurgers() {
-        return restTemplate.getForEntity(apihost + BURGER_BASE_URL, BurgerDtoList.class);
-    }
-
-    @Override
     public BurgerDtoList getBurgerDtoList() {
-        return Optional.ofNullable(getBurgers().getBody()).orElse(new BurgerDtoList());
+        ResponseEntity<BurgerDtoList> response = restTemplate.getForEntity(apihost + BURGER_BASE_URL, BurgerDtoList.class);
+        return Optional.ofNullable(response.getBody()).orElse(new BurgerDtoList());
     }
 }

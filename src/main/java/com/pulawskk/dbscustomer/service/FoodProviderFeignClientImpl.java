@@ -3,14 +3,14 @@ package com.pulawskk.dbscustomer.service;
 import com.pulawskk.dbscustomer.model.BurgerDtoList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @RequiredArgsConstructor
-@Profile("local-discovery")
+@Primary
 @Slf4j
 @Service
 public class FoodProviderFeignClientImpl implements FoodProviderFeignClient, FoodProvider {

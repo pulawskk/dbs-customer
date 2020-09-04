@@ -17,7 +17,6 @@ import java.util.Optional;
 import static com.pulawskk.dbscustomer.service.PlaceOrderService.BURGER_BASE_URL;
 
 @Service
-@Profile("!local-discovery")
 @ConfigurationProperties(value = "dbs.food")
 public class FoodProviderRestTemplateImpl implements FoodProviderRestTemplate, FoodProvider {
 
